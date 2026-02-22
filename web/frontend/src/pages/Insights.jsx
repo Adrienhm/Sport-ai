@@ -3,7 +3,7 @@ function Insights({ sport = "Football" }) {
     <div className="page">
       <div className="page-head">
         <div>
-          <p className="eyebrow">Analyses ({sport})</p>
+          <p className="eyebrow">Analyses</p>
           <h1>Recommandations tactiques</h1>
           <p className="lead">
             L'IA identifie les zones a fort impact, les risques et les actions clé.

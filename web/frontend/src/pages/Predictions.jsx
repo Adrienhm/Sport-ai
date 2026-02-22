@@ -119,7 +119,7 @@ function Predictions({ sport = "Football" }) {
     <div className="page">
       <div className="page-head">
         <div>
-          <p className="eyebrow">Prediction IA ({sport})</p>
+          <p className="eyebrow">Prediction IA</p>
           <h1>Simulation de match en temps reel</h1>
           <p className="lead">Chaque sport utilise son modele actif et son dataset dedie.</p>
         </div>

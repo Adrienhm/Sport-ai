@@ -176,7 +176,7 @@ function ModelLab({ sport = "Football" }) {
     <div className="page">
       <div className="page-head">
         <div>
-          <p className="eyebrow">Laboratoire IA ({sport})</p>
+          <p className="eyebrow">Laboratoire IA</p>
           <h1>Comparer et ajuster le modele</h1>
           <p className="lead">Chaque sport a son propre entrainement, ses courbes et son modele actif.</p>
         </div>

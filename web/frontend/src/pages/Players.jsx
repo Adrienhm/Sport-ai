@@ -50,7 +50,7 @@ function Players({ sport = "Football" }) {
     <div className="page">
       <div className="page-head">
         <div>
-          <p className="eyebrow">Joueurs ({sport})</p>
+          <p className="eyebrow">Joueurs</p>
           <h1>Statistiques et forme par sport</h1>
           <p className="lead">
             Chaque sport charge son roster, ses equipes et ses indicateurs de performance.

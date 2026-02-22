@@ -21,7 +21,6 @@ function ProtectedRoute({ authed, children }) {
 }
 
 function App() {
-  const [aiStatus, setAiStatus] = useState("checking");
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [starting, setStarting] = useState(false);
   const [topbarMessage, setTopbarMessage] = useState("");
@@ -44,10 +43,8 @@ function App() {
   const checkAi = async () => {
     try {
       await api.get("/ai/health", { params: { sport: activeSport.toLowerCase() } });
-      setAiStatus("online");
       setShowOnboarding(false);
     } catch (err) {
-      setAiStatus("offline");
       setShowOnboarding(true);
     }
   };
@@ -76,7 +73,7 @@ function App() {
 
   const handleNewSimulation = () => {
     navigate("/predictions");
-    setTopbarMessage(`Nouvelle simulation ${activeSport} prête.`);
+    setTopbarMessage("Nouvelle simulation prete.");
   };
 
   const handleLogin = async (payload) => {
@@ -109,7 +106,7 @@ function App() {
     const nextSport = event.target.value;
     setActiveSport(nextSport);
     localStorage.setItem("sai_active_sport", nextSport);
-    setTopbarMessage(`Sport actif: ${nextSport}`);
+    setTopbarMessage("");
   };
 
   if (!authed) {
@@ -132,11 +129,6 @@ function App() {
             <p className="brand-title">Sport AI</p>
             <p className="brand-sub">Analyse & prédiction sportive</p>
           </div>
-        </div>
-
-        <div className={`status-pill ${aiStatus}`}>
-          <span className="dot" />
-          IA {aiStatus === "online" ? "en ligne" : aiStatus === "offline" ? "hors ligne" : "verif"}
         </div>
 
         <nav className="side-nav">
@@ -174,8 +166,17 @@ function App() {
             </select>
             <div className="user-pill">
               <span>{authState.user?.name || "Utilisateur"}</span>
-              <button className="button ghost" onClick={handleLogout}>
-                Deconnexion
+              <button
+                className="button ghost icon-button"
+                onClick={handleLogout}
+                title="Deconnexion"
+                aria-label="Deconnexion"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4" />
+                  <path d="M15 16l5-4-5-4" />
+                  <path d="M20 12H9" />
+                </svg>
               </button>
             </div>
             <button className="button ghost" onClick={handleShare}>
