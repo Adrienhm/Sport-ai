@@ -73,7 +73,7 @@ function DataHub({ sport = "Football" }) {
     <div className="page">
       <div className="page-head">
         <div>
-          <p className="eyebrow">Data Hub ({sport})</p>
+          <p className="eyebrow">Data Hub</p>
           <h1>Dataset et scoring dedies</h1>
           <p className="lead">
             Chaque sport a son propre fichier de donnees et son propre cycle de training.
