@@ -16,7 +16,7 @@ function Matches({ sport = "Football" }) {
   return (
     <div className="matches">
       <div className="section-head">
-        <h2>Matchs recents - {sport}</h2>
+        <h2>Matchs recents</h2>
         <p>Flux dedie par sport avec ses propres donnees et ses propres scores.</p>
       </div>
 
@@ -39,7 +39,6 @@ function Matches({ sport = "Football" }) {
                 <strong>{match.scoreB}</strong>
               </div>
               <div className="match-meta">
-                <span>Sport: {sport}</span>
                 <span>Date: {match.date || "-"}</span>
               </div>
             </div>
