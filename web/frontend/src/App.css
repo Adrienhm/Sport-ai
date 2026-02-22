@@ -200,6 +200,59 @@
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  align-items: end;
+}
+
+.control-group {
+  display: grid;
+  gap: 6px;
+  min-width: 210px;
+}
+
+.control-group span {
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.select-wrap {
+  position: relative;
+}
+
+.select-wrap::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid rgba(255, 255, 255, 0.7);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.7);
+  transform: translateY(-60%) rotate(45deg);
+  pointer-events: none;
+}
+
+.filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 34px 10px 12px;
+  min-height: 42px;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: rgba(73, 226, 111, 0.55);
+  box-shadow: 0 0 0 3px rgba(73, 226, 111, 0.18);
+}
+
+.filter-select option {
+  color: #111;
 }
 
 .player-grid {
@@ -1189,31 +1242,118 @@
   }
 
   .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    padding: 16px;
+    backdrop-filter: blur(12px);
   }
 
   .side-nav {
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+  }
+
+  .side-nav a {
+    white-space: nowrap;
+    flex: 0 0 auto;
   }
 
   .sidebar-card {
     display: none;
   }
 
+  .topbar {
+    align-items: flex-start;
+  }
+
+  .topbar-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
   .content {
-    padding: 24px;
+    padding: 18px 16px 36px;
+    gap: 22px;
+  }
+
+  .sport-select {
+    min-width: 126px;
+    min-height: 44px;
+  }
+
+  .button,
+  .filter-select,
+  .input {
+    min-height: 44px;
+  }
+
+  .page h1 {
+    font-size: clamp(1.6rem, 4.6vw, 2.2rem);
+  }
+
+  .pitch {
+    transform: none;
+  }
+
+  .pitch:hover {
+    transform: none;
+    box-shadow: none;
   }
 }
 
 @media (max-width: 700px) {
+  .brand-sub {
+    display: none;
+  }
+
   .topbar {
     flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
+  }
+
+  .topbar-actions {
+    gap: 8px;
+  }
+
+  .user-pill {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .page-head {
+    gap: 12px;
+  }
+
+  .button-group {
+    width: 100%;
+  }
+
+  .button-group .button {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .player-controls {
+    width: 100%;
+  }
+
+  .player-controls .input,
+  .control-group {
+    min-width: 100%;
+  }
+
+  .panel {
+    padding: 16px;
   }
 
   .prob-row {
