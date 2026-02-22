@@ -63,20 +63,34 @@ function Players({ sport = "Football" }) {
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
           />
-          <select value={teamFilter} onChange={(event) => setTeamFilter(event.target.value)}>
-            {teams.map((team) => (
-              <option key={team} value={team}>
-                {team === "all" ? "Toutes les equipes" : team}
-              </option>
-            ))}
-          </select>
-          <select value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
-            {sortOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                Trier par {option.label}
-              </option>
-            ))}
-          </select>
+          <div className="control-group">
+            <span>Equipe</span>
+            <div className="select-wrap">
+              <select
+                className="filter-select"
+                value={teamFilter}
+                onChange={(event) => setTeamFilter(event.target.value)}
+              >
+                {teams.map((team) => (
+                  <option key={team} value={team}>
+                    {team === "all" ? "Toutes les equipes" : team}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="control-group">
+            <span>Tri</span>
+            <div className="select-wrap">
+              <select className="filter-select" value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
+                {sortOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    Trier par {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
