@@ -64,7 +64,6 @@ function Players({ sport = "Football" }) {
             onChange={(event) => setFilter(event.target.value)}
           />
           <div className="control-group">
-            <span>Equipe</span>
             <div className="select-wrap">
               <select
                 className="filter-select"
@@ -80,7 +79,6 @@ function Players({ sport = "Football" }) {
             </div>
           </div>
           <div className="control-group">
-            <span>Tri</span>
             <div className="select-wrap">
               <select className="filter-select" value={sortBy} onChange={(event) => setSortBy(event.target.value)}>
                 {sortOptions.map((option) => (
