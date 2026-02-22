@@ -166,8 +166,17 @@ function App() {
             </select>
             <div className="user-pill">
               <span>{authState.user?.name || "Utilisateur"}</span>
-              <button className="button ghost" onClick={handleLogout}>
-                Deconnexion
+              <button
+                className="button ghost icon-button"
+                onClick={handleLogout}
+                title="Deconnexion"
+                aria-label="Deconnexion"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4" />
+                  <path d="M15 16l5-4-5-4" />
+                  <path d="M20 12H9" />
+                </svg>
               </button>
             </div>
             <button className="button ghost" onClick={handleShare}>
