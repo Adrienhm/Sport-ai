@@ -67,38 +67,6 @@ const buildSummary = (stats, sport) => {
   );
 };
 
-router.get("/csv", async (req, res) => {
-  const sport = req.query.sport ? normalizeSport(req.query.sport) : null;
-  if (req.query.sport && !sport) {
-    return res.status(400).json({
-      error: "Invalid sport",
-      supported_sports: SPORT_VALUES,
-    });
-  }
-
-  try {
-    const matches = await fetchMatches(sport);
-    const header = ["sport", "teamA", "scoreA", "scoreB", "teamB", "form", "risk", "date"];
-    const rows = matches.map((m) => [
-      normalizeSport(m.sport) || "football",
-      m.teamA,
-      m.scoreA,
-      m.scoreB,
-      m.teamB,
-      m.form || "",
-      m.risk || "",
-      m.date || "",
-    ]);
-    const csv = [header.join(","), ...rows.map((r) => r.join(","))].join("\n");
-    res.setHeader("Content-Type", "text/csv");
-    const fileSuffix = sport || "all-sports";
-    res.setHeader("Content-Disposition", `attachment; filename=sport-ai-${fileSuffix}-matches.csv`);
-    return res.send(csv);
-  } catch (error) {
-    return res.status(500).json({ error: "CSV export failed" });
-  }
-});
-
 router.get("/pdf", async (req, res) => {
   const sport = req.query.sport ? normalizeSport(req.query.sport) : null;
   if (req.query.sport && !sport) {
@@ -117,80 +85,177 @@ router.get("/pdf", async (req, res) => {
 
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([595, 842]);
-    const { height } = page.getSize();
+    const { width, height } = page.getSize();
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-    const accent = rgb(0.29, 0.89, 0.44);
-    const muted = rgb(0.7, 0.75, 0.75);
-    const dark = rgb(0.1, 0.12, 0.12);
+    const colors = {
+      bg: rgb(0.06, 0.09, 0.08),
+      panel: rgb(0.09, 0.13, 0.12),
+      panelSoft: rgb(0.12, 0.17, 0.15),
+      accent: rgb(0.31, 0.88, 0.45),
+      accentSoft: rgb(0.95, 0.78, 0.28),
+      text: rgb(0.95, 0.97, 0.94),
+      muted: rgb(0.68, 0.74, 0.71),
+      stroke: rgb(0.2, 0.26, 0.24),
+    };
 
-    page.drawRectangle({ x: 0, y: height - 120, width: 595, height: 120, color: dark });
-    page.drawText(`Sport AI - Rapport de performance (${sportLabel})`, {
-      x: 40,
-      y: height - 60,
-      size: 20,
+    page.drawRectangle({ x: 0, y: 0, width, height, color: colors.bg });
+    page.drawRectangle({ x: 0, y: height - 130, width, height: 130, color: colors.panel });
+    page.drawRectangle({ x: 0, y: height - 12, width, height: 12, color: colors.accent });
+
+    page.drawText("SPORT AI", {
+      x: 34,
+      y: height - 52,
+      size: 10,
       font: fontBold,
-      color: accent,
+      color: colors.accentSoft,
     });
-    page.drawText(`Genere le: ${new Date().toLocaleString("fr-FR")}`, {
-      x: 40,
-      y: height - 85,
+    page.drawText(`Rapport de performance - ${sportLabel}`, {
+      x: 34,
+      y: height - 78,
+      size: 21,
+      font: fontBold,
+      color: colors.text,
+    });
+    page.drawText(`Genere le ${new Date().toLocaleString("fr-FR")}`, {
+      x: 34,
+      y: height - 98,
       size: 10,
       font,
-      color: muted,
+      color: colors.muted,
     });
 
-    let y = height - 150;
-    page.drawText("Synthese IA", { x: 40, y, size: 12, font: fontBold });
-    y -= 16;
-    page.drawText(summary, { x: 40, y, size: 10, font, color: muted, maxWidth: 520 });
-
-    y -= 40;
-    page.drawText("Indicateurs cle", { x: 40, y, size: 12, font: fontBold });
-    y -= 18;
+    const summaryTop = height - 165;
+    page.drawRectangle({
+      x: 34,
+      y: summaryTop - 68,
+      width: width - 68,
+      height: 68,
+      color: colors.panelSoft,
+      borderColor: colors.stroke,
+      borderWidth: 1,
+    });
+    page.drawText("Synthese IA", {
+      x: 50,
+      y: summaryTop - 20,
+      size: 11,
+      font: fontBold,
+      color: colors.accentSoft,
+    });
+    page.drawText(summary, {
+      x: 50,
+      y: summaryTop - 40,
+      size: 10,
+      font,
+      color: colors.muted,
+      maxWidth: width - 100,
+    });
 
     const cards = [
-      { label: "Matchs analyses", value: stats.total },
-      { label: avgLabel, value: stats.avgGoals },
-      { label: "Victoire domicile", value: `${stats.homeWinRate}%` },
+      { label: "Matchs analyses", value: String(stats.total) },
+      { label: avgLabel, value: String(stats.avgGoals) },
+      { label: "Victoire equipe A", value: `${stats.homeWinRate}%` },
       { label: "Volatilite (nuls)", value: `${stats.volatility}%` },
     ];
 
+    const cardY = summaryTop - 96;
     cards.forEach((card, idx) => {
-      const x = 40 + (idx % 2) * 260;
-      const row = Math.floor(idx / 2);
-      const yPos = y - row * 60;
-      page.drawRectangle({ x, y: yPos - 30, width: 240, height: 48, color: rgb(0.12, 0.15, 0.14) });
-      page.drawText(card.label, { x: x + 12, y: yPos + 6, size: 9, font, color: muted });
-      page.drawText(String(card.value), { x: x + 12, y: yPos - 10, size: 14, font: fontBold, color: accent });
+      const cardW = 126;
+      const gap = 12;
+      const x = 34 + idx * (cardW + gap);
+      page.drawRectangle({
+        x,
+        y: cardY - 72,
+        width: cardW,
+        height: 72,
+        color: colors.panelSoft,
+        borderColor: colors.stroke,
+        borderWidth: 1,
+      });
+      page.drawText(card.label, {
+        x: x + 10,
+        y: cardY - 24,
+        size: 8.5,
+        font,
+        color: colors.muted,
+      });
+      page.drawText(card.value, {
+        x: x + 10,
+        y: cardY - 50,
+        size: 18,
+        font: fontBold,
+        color: colors.accent,
+      });
     });
 
-    y -= 140;
-    page.drawText(`Graphique - ${avgLabel}`, { x: 40, y, size: 12, font: fontBold });
-    y -= 12;
-    const barX = 40;
-    const barY = y - 60;
-    const barWidth = 260;
-    const barHeight = 12;
-    const maxAvg = 4;
-    const fillWidth = Math.min(barWidth, (Number(stats.avgGoals) / maxAvg) * barWidth);
-    page.drawRectangle({ x: barX, y: barY, width: barWidth, height: barHeight, color: rgb(0.18, 0.22, 0.2) });
-    page.drawRectangle({ x: barX, y: barY, width: fillWidth, height: barHeight, color: accent });
-    page.drawText(`${stats.avgGoals} / match`, { x: barX, y: barY + 18, size: 9, font, color: muted });
+    const chartY = cardY - 102;
+    page.drawText(`Indice ${avgLabel.toLowerCase()}`, {
+      x: 34,
+      y: chartY,
+      size: 11,
+      font: fontBold,
+      color: colors.text,
+    });
+    page.drawRectangle({ x: 34, y: chartY - 26, width: 260, height: 10, color: colors.stroke });
+    const maxAvg = sport === "football" ? 4 : 120;
+    const fillWidth = Math.max(2, Math.min(260, (Number(stats.avgGoals) / maxAvg) * 260));
+    page.drawRectangle({ x: 34, y: chartY - 26, width: fillWidth, height: 10, color: colors.accent });
+    page.drawText(`${stats.avgGoals} / match`, {
+      x: 300,
+      y: chartY - 24,
+      size: 10,
+      font: fontBold,
+      color: colors.accentSoft,
+    });
 
-    y -= 100;
-    page.drawText("Derniers matchs", { x: 40, y, size: 12, font: fontBold });
-    y -= 16;
+    const tableTop = chartY - 58;
+    page.drawText("Derniers matchs", {
+      x: 34,
+      y: tableTop,
+      size: 12,
+      font: fontBold,
+      color: colors.text,
+    });
+    page.drawRectangle({
+      x: 34,
+      y: tableTop - 18,
+      width: width - 68,
+      height: 20,
+      color: colors.panel,
+      borderColor: colors.stroke,
+      borderWidth: 1,
+    });
+    page.drawText("Equipe A", { x: 44, y: tableTop - 11, size: 9, font: fontBold, color: colors.muted });
+    page.drawText("Score", { x: 250, y: tableTop - 11, size: 9, font: fontBold, color: colors.muted });
+    page.drawText("Equipe B", { x: 320, y: tableTop - 11, size: 9, font: fontBold, color: colors.muted });
+    page.drawText("Date", { x: 500, y: tableTop - 11, size: 9, font: fontBold, color: colors.muted });
 
     const rows = matches.slice(0, 10);
+    let rowY = tableTop - 36;
     if (!rows.length) {
-      page.drawText("Aucun match disponible.", { x: 40, y, size: 10, font, color: muted });
+      page.drawText("Aucun match disponible.", { x: 44, y: rowY, size: 10, font, color: colors.muted });
     } else {
-      rows.forEach((m) => {
-        const line = `${m.teamA} ${m.scoreA} - ${m.scoreB} ${m.teamB} (${m.date || "date inconnue"})`;
-        page.drawText(line, { x: 40, y, size: 10, font });
-        y -= 14;
+      rows.forEach((match, idx) => {
+        const isEven = idx % 2 === 0;
+        page.drawRectangle({
+          x: 34,
+          y: rowY - 4,
+          width: width - 68,
+          height: 16,
+          color: isEven ? colors.panelSoft : colors.panel,
+        });
+        page.drawText(String(match.teamA || "-"), { x: 44, y: rowY, size: 9, font, color: colors.text });
+        page.drawText(`${match.scoreA ?? "-"} - ${match.scoreB ?? "-"}`, {
+          x: 250,
+          y: rowY,
+          size: 9,
+          font: fontBold,
+          color: colors.accent,
+        });
+        page.drawText(String(match.teamB || "-"), { x: 320, y: rowY, size: 9, font, color: colors.text });
+        page.drawText(String(match.date || "-"), { x: 500, y: rowY, size: 8, font, color: colors.muted });
+        rowY -= 18;
       });
     }
 
