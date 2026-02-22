@@ -54,135 +54,6 @@ function Dashboard({ sport = "Football" }) {
     };
   }, [matches]);
 
-  const buildReportHtml = () => {
-    const rows = matches.slice(0, 10).map((m) => {
-      const date = m.date || "date inconnue";
-      return `<tr><td>${m.teamA}</td><td>${m.scoreA}</td><td>${m.scoreB}</td><td>${m.teamB}</td><td>${date}</td></tr>`;
-    });
-
-    return `<!doctype html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <title>Sport AI - Rapport</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #0f1715; color: #f4f7f2; padding: 24px; }
-    h1 { margin: 0 0 8px; }
-    .meta { color: #aab8b0; margin-bottom: 20px; }
-    .grid { display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 12px; margin-bottom: 24px; }
-    .card { background: #121b18; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-    th, td { border-bottom: 1px solid rgba(255,255,255,0.1); padding: 8px; text-align: left; }
-    th { color: #aab8b0; font-weight: 600; }
-  </style>
-</head>
-<body>
-  <h1>Sport AI - Rapport de performance (${sport})</h1>
-  <div class="meta">Genere le: ${new Date().toLocaleString("fr-FR")}</div>
-  <div class="grid">
-    <div class="card"><strong>Matchs analyses</strong><div>${stats.total}</div></div>
-    <div class="card"><strong>${isFootball ? "Moyenne de buts" : "Points moyens"}</strong><div>${stats.avgGoals}</div></div>
-    <div class="card"><strong>Victoire equipe A</strong><div>${stats.homeWinRate}%</div></div>
-    <div class="card"><strong>Volatilite (nuls)</strong><div>${stats.volatility}%</div></div>
-  </div>
-  <h2>Derniers matchs</h2>
-  <table>
-    <thead>
-      <tr><th>Equipe A</th><th>Score A</th><th>Score B</th><th>Equipe B</th><th>Date</th></tr>
-    </thead>
-    <tbody>
-      ${rows.length ? rows.join("") : "<tr><td colspan=\"5\">Aucun match disponible.</td></tr>"}
-    </tbody>
-  </table>
-</body>
-</html>`;
-  };
-
-  const generateTxtReport = () => {
-    setReporting(true);
-    try {
-      const now = new Date();
-      const reportLines = [
-        `Sport AI - Rapport de performance (${sport})`,
-        `Genere le: ${now.toLocaleString("fr-FR")}`,
-        "",
-        "Synthese",
-        `- Matchs analyses: ${stats.total}`,
-        `- ${isFootball ? "Moyenne de buts" : "Points moyens"}: ${stats.avgGoals}`,
-        `- Victoire equipe A: ${stats.homeWinRate}%`,
-        `- Volatilite (nuls): ${stats.volatility}%`,
-        "",
-        "Derniers matchs",
-      ];
-
-      if (!matches.length) {
-        reportLines.push("- Aucun match disponible.");
-      } else {
-        matches.slice(0, 10).forEach((m) => {
-          reportLines.push(
-            `- ${m.teamA} ${m.scoreA} - ${m.scoreB} ${m.teamB} (${m.date || "date inconnue"})`
-          );
-        });
-      }
-
-      const blob = new Blob([reportLines.join("\n")], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `sport-ai-${sport.toLowerCase()}-rapport-${now.toISOString().slice(0, 10)}.txt`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
-      setReportStatus("Rapport TXT genere et telecharge.");
-    } catch {
-      setReportStatus("Impossible de generer le rapport TXT.");
-    } finally {
-      setReporting(false);
-    }
-  };
-
-  const generateHtmlReport = () => {
-    setReporting(true);
-    try {
-      const html = buildReportHtml();
-      const blob = new Blob([html], { type: "text/html" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `sport-ai-${sport.toLowerCase()}-rapport-${new Date().toISOString().slice(0, 10)}.html`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
-      setReportStatus("Rapport HTML genere et telecharge.");
-    } catch {
-      setReportStatus("Impossible de generer le rapport HTML.");
-    } finally {
-      setReporting(false);
-    }
-  };
-
-  const generateCsvExport = async () => {
-    setReporting(true);
-    try {
-      const res = await api.get("/report/csv", { params: { sport: sportKey }, responseType: "blob" });
-      const url = URL.createObjectURL(res.data);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `sport-ai-${sport.toLowerCase()}-matches-${new Date().toISOString().slice(0, 10)}.csv`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
-      setReportStatus("Export CSV telecharge.");
-    } catch {
-      setReportStatus("Impossible d'exporter le CSV.");
-    } finally {
-      setReporting(false);
-    }
-  };
-
   const generatePdfReport = async () => {
     setReporting(true);
     try {
@@ -210,23 +81,27 @@ function Dashboard({ sport = "Football" }) {
       <div className="page-head">
         <div>
           <p className="eyebrow">Tableau de bord</p>
-          <h1>Suivi temps reel des performances ({sport})</h1>
+          <h1>Suivi temps reel des performances</h1>
           <p className="lead">
             Synthese IA des tendances, formes d'equipe et alertes de risque multi-sports.
           </p>
         </div>
         <div className="button-group">
-          <button className="button ghost" onClick={generateTxtReport} disabled={reporting}>
-            TXT
-          </button>
-          <button className="button ghost" onClick={generateCsvExport} disabled={reporting}>
-            Export CSV
-          </button>
-          <button className="button secondary" onClick={generateHtmlReport} disabled={reporting}>
-            Rapport HTML
-          </button>
-          <button className="button primary" onClick={generatePdfReport} disabled={reporting}>
-            {reporting ? "Generation..." : "Rapport PDF"}
+          <button
+            className="button primary icon-button"
+            onClick={generatePdfReport}
+            disabled={reporting}
+            title="Generer le rapport PDF"
+            aria-label="Generer le rapport PDF"
+          >
+            {reporting ? (
+              "..."
+            ) : (
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM13 3v5h5" />
+                <path d="M8 14h8M8 17h6M8 11h3" />
+              </svg>
+            )}
           </button>
         </div>
       </div>
