@@ -21,7 +21,6 @@ function ProtectedRoute({ authed, children }) {
 }
 
 function App() {
-  const [aiStatus, setAiStatus] = useState("checking");
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [starting, setStarting] = useState(false);
   const [topbarMessage, setTopbarMessage] = useState("");
@@ -44,10 +43,8 @@ function App() {
   const checkAi = async () => {
     try {
       await api.get("/ai/health", { params: { sport: activeSport.toLowerCase() } });
-      setAiStatus("online");
       setShowOnboarding(false);
     } catch (err) {
-      setAiStatus("offline");
       setShowOnboarding(true);
     }
   };
@@ -76,7 +73,7 @@ function App() {
 
   const handleNewSimulation = () => {
     navigate("/predictions");
-    setTopbarMessage(`Nouvelle simulation ${activeSport} prête.`);
+    setTopbarMessage("Nouvelle simulation prete.");
   };
 
   const handleLogin = async (payload) => {
@@ -109,7 +106,7 @@ function App() {
     const nextSport = event.target.value;
     setActiveSport(nextSport);
     localStorage.setItem("sai_active_sport", nextSport);
-    setTopbarMessage(`Sport actif: ${nextSport}`);
+    setTopbarMessage("");
   };
 
   if (!authed) {
@@ -132,11 +129,6 @@ function App() {
             <p className="brand-title">Sport AI</p>
             <p className="brand-sub">Analyse & prédiction sportive</p>
           </div>
-        </div>
-
-        <div className={`status-pill ${aiStatus}`}>
-          <span className="dot" />
-          IA {aiStatus === "online" ? "en ligne" : aiStatus === "offline" ? "hors ligne" : "verif"}
         </div>
 
         <nav className="side-nav">
