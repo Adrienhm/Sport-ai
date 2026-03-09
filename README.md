@@ -49,28 +49,28 @@ Ces modèles sont entraînés sur des données historiques afin d’identifier d
 
 # Structure du projet
 
+```
 sports-ai
 │
 ├── data
-│ ├── football
-│ ├── rugby
-│ ├── basketball
-│ ├── handball
-│ └── tennis
+│   ├── football
+│   ├── rugby
+│   ├── basketball
+│   ├── handball
+│   └── tennis
 │
 ├── notebooks
-│ └── data_analysis.ipynb
+│   └── data_analysis.ipynb
 │
 ├── models
-│ └── prediction_models.py
+│   └── prediction_models.py
 │
 ├── src
-│ └── data_processing.py
+│   └── data_processing.py
 │
 ├── requirements.txt
 └── README.md
-
-
+```
 ---
 
 # Exemple d'analyse
@@ -108,5 +108,6 @@ Adrien Hermann Mbopda Fodjo
 Étudiant en Bachelor Développement Data & Intelligence Artificielle – ECE Lyon
 
 GitHub : https://github.com/Adrienhm
+
 
 
