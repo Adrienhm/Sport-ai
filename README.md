@@ -97,6 +97,34 @@ Probability Team B win : 38%
 ![Prediction Example](prediction_example.png)
 
 
+## Example matchs analysés football
+
+![Matchs Example](matchs_football.png)
+
+
+## Example Analyses football
+
+![Analyse Example](Analyses_football.png)
+
+
+## Example statisques joueurs
+
+![Statistiques joueurs Example](Statisques_joueurs.png)
+
+
+## Example Data Hbub
+
+![Data Hub Example](data_hub.png)
+
+
+## Example Laboratoire IA
+
+![Laboratoire IA Example](laboratoire_ia.png)
+![Laboratoire IA Example](laboratoire_ia1.png)
+![Laboratoire IA Example](laboratoire_ia2.png)
+![Laboratoire IA Example](laboratoire_ia3.png)
+
+
 ---
 
 # Objectif académique
@@ -111,6 +139,7 @@ Adrien Hermann Mbopda Fodjo
 Étudiant en Bachelor Développement Data & Intelligence Artificielle – ECE Lyon
 
 GitHub : https://github.com/Adrienhm
+
 
 
 
