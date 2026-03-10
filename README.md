@@ -92,6 +92,9 @@ Résultat :
 
 Probability Team A win : 62%
 Probability Team B win : 38%
+## Example Output
+
+![Prediction Example](prediction_example.png)
 
 
 ---
@@ -108,6 +111,7 @@ Adrien Hermann Mbopda Fodjo
 Étudiant en Bachelor Développement Data & Intelligence Artificielle – ECE Lyon
 
 GitHub : https://github.com/Adrienhm
+
 
 
 
