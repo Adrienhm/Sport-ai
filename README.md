@@ -52,25 +52,33 @@ Ces modèles sont entraînés sur des données historiques afin d’identifier d
 # Structure du projet
 
 ```
-sports-ai
+SPORT-AI/
 │
-├── data
-│   ├── football
-│   ├── rugby
-│   ├── basketball
-│   ├── handball
-│   └── tennis
+├── ai/
+│   ├── data/
+│   │   ├── football_matches.csv
+│   │   ├── basketball_matches.csv
+│   │   ├── rugby_matches.csv
+│   │   ├── handball_matches.csv
+│   │   ├── tennis_matches.csv
+│   │   └── matches.csv
+│   │
+│   ├── models/
+│   │
+│   ├── ingest_statsbomb.py
+│   ├── train.py
+│   ├── training.py
+│   ├── service.py
+│   ├── requirements.txt
+│   └── README.md
 │
-├── notebooks
-│   └── data_analysis.ipynb
+├── backend/
+├── web/
+├── mobile/
+├── docs/
 │
-├── models
-│   └── prediction_models.py
-│
-├── src
-│   └── data_processing.py
-│
-├── requirements.txt
+├── .gitignore
+├── package-lock.json
 └── README.md
 ```
 ---
@@ -141,6 +149,7 @@ Adrien Hermann Mbopda Fodjo
 Étudiant en Bachelor Développement Data & Intelligence Artificielle – ECE Lyon
 
 GitHub : https://github.com/Adrienhm
+
 
 
 
