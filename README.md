@@ -114,7 +114,7 @@ Probability Team B win : 38%
 ![Statistiques joueurs Example](Statistiques_joueurs.png)
 
 
-## Example Data Hbub
+## Example Data Hub
 
 ![Data Hub Example](data_hub.png)
 
@@ -141,6 +141,7 @@ Adrien Hermann Mbopda Fodjo
 Étudiant en Bachelor Développement Data & Intelligence Artificielle – ECE Lyon
 
 GitHub : https://github.com/Adrienhm
+
 
 
 
