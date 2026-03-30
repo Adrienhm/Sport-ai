@@ -1228,6 +1228,12 @@
   stroke-linejoin: round;
 }
 
+.model-lab-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .hint {
   color: var(--muted);
 }
