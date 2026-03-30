@@ -60,7 +60,7 @@ const CurveCard = ({ title, subtitle, polyline, footer }) => (
   </div>
 );
 
-function ModelLab({ sport = "Football" }) {
+function ModelLab({ sport = "Football", onLogout }) {
   const sportKey = toSportKey(sport);
   const [metrics, setMetrics] = useState(null);
   const [compare, setCompare] = useState(null);
@@ -352,6 +352,21 @@ function ModelLab({ sport = "Football" }) {
             modeles actifs differents.
           </p>
         </div>
+      </section>
+
+      <section className="panel model-lab-footer">
+        <button
+          className="button ghost icon-button"
+          onClick={onLogout}
+          title="Deconnexion"
+          aria-label="Deconnexion"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4" />
+            <path d="M15 16l5-4-5-4" />
+            <path d="M20 12H9" />
+          </svg>
+        </button>
       </section>
     </div>
   );
