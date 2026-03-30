@@ -141,6 +141,19 @@ function App() {
           <NavLink to="/players">Joueurs</NavLink>
           <NavLink to="/data">Données</NavLink>
           <NavLink to="/model">Laboratoire IA</NavLink>
+          <button
+            className="side-nav-logout"
+            onClick={handleLogout}
+            title="Deconnexion"
+            aria-label="Deconnexion"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4" />
+              <path d="M15 16l5-4-5-4" />
+              <path d="M20 12H9" />
+            </svg>
+            <span>Deconnexion</span>
+          </button>
         </nav>
 
         <div className="sidebar-card">
@@ -231,7 +244,7 @@ function App() {
               path="/model"
               element={
                 <ProtectedRoute authed={authed}>
-                  <ModelLab sport={activeSport} onLogout={handleLogout} />
+                  <ModelLab sport={activeSport} />
                 </ProtectedRoute>
               }
             />
