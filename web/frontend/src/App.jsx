@@ -28,6 +28,7 @@ function App() {
   const [activeSport, setActiveSport] = useState(
     () => localStorage.getItem("sai_active_sport") || "Football"
   );
+  const [chatOpen, setChatOpen] = useState(false);
   const [authState, setAuthState] = useState(() => {
     const token = localStorage.getItem("fai_token");
     const rawUser = localStorage.getItem("fai_user");
@@ -36,8 +37,8 @@ function App() {
       user: rawUser ? JSON.parse(rawUser) : null,
     };
   });
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const authed = useMemo(() => Boolean(authState.token), [authState.token]);
 
   const checkAi = async () => {
@@ -81,10 +82,11 @@ function App() {
     const token = res.data?.token || "local-dev-token";
     const user =
       res.data?.user ||
-      ({
+      {
         name: payload.email?.split("@")[0] || "Utilisateur",
         email: payload.email || "demo@football.ai",
-      });
+      };
+
     localStorage.setItem("fai_token", token);
     localStorage.setItem("fai_user", JSON.stringify(user));
     setAuthState({ token, user });
@@ -94,6 +96,7 @@ function App() {
     localStorage.removeItem("fai_token");
     localStorage.removeItem("fai_user");
     setAuthState({ token: null, user: null });
+    setChatOpen(false);
     navigate("/login");
   };
 
@@ -156,6 +159,7 @@ function App() {
             <p className="eyebrow">Centre de controle</p>
             <h2>Tableau de bord IA</h2>
           </div>
+
           <div className="topbar-actions">
             <select className="sport-select" value={activeSport} onChange={handleSportChange}>
               {SPORTS.map((sport) => (
@@ -164,6 +168,7 @@ function App() {
                 </option>
               ))}
             </select>
+
             <div className="user-pill">
               <span>{authState.user?.name || "Utilisateur"}</span>
               <button
@@ -179,12 +184,15 @@ function App() {
                 </svg>
               </button>
             </div>
+
             <button className="button ghost" onClick={handleShare}>
               Partager
             </button>
+
             <button className="button primary" onClick={handleNewSimulation}>
               Nouvelle simulation
             </button>
+
             {topbarMessage ? <span className="topbar-message">{topbarMessage}</span> : null}
           </div>
         </header>
@@ -256,8 +264,8 @@ function App() {
           <div className="onboarding-card">
             <h3>Activation des services</h3>
             <p>
-              L'IA est hors ligne. L'application peut afficher l'UI, mais les prédictions et
-              les métriques restent indisponibles tant que le service IA ne tourne pas.
+              L'IA est hors ligne. L'application peut afficher l'UI, mais les prédictions et les
+              métriques restent indisponibles tant que le service IA ne tourne pas.
             </p>
             <ol>
               <li>Lancer le service IA (FastAPI).</li>
@@ -288,9 +296,9 @@ function App() {
                 Fermer
               </button>
             </div>
-            <p className="hint">
-              Envoie le lien via ta plateforme préférée ou copie-le.
-            </p>
+
+            <p className="hint">Envoie le lien via ta plateforme préférée ou copie-le.</p>
+
             <div className="share-actions">
               <a
                 className="button primary"
@@ -298,6 +306,7 @@ function App() {
               >
                 Email
               </a>
+
               <a
                 className="button secondary"
                 href={`https://wa.me/?text=${shareText}%0A${shareUrl}`}
@@ -306,6 +315,7 @@ function App() {
               >
                 WhatsApp
               </a>
+
               <a
                 className="button ghost"
                 href={`https://t.me/share/url?url=${shareUrl}&text=${shareText}`}
@@ -314,6 +324,7 @@ function App() {
               >
                 Telegram
               </a>
+
               <a
                 className="button secondary"
                 href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`}
@@ -322,6 +333,7 @@ function App() {
               >
                 LinkedIn
               </a>
+
               <a
                 className="button ghost"
                 href={`https://twitter.com/intent/tweet?text=${shareText}%0A${shareUrl}`}
@@ -330,6 +342,7 @@ function App() {
               >
                 X
               </a>
+
               <a
                 className="button ghost"
                 href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`}
@@ -339,6 +352,7 @@ function App() {
                 Facebook
               </a>
             </div>
+
             <div className="share-copy">
               <input type="text" readOnly value={window.location.href} />
               <button
@@ -358,6 +372,29 @@ function App() {
           </div>
         </div>
       ) : null}
+
+      {authed && (
+        <>
+          <button
+            className="chatbot-fab"
+            onClick={() => setChatOpen((prev) => !prev)}
+            aria-label={chatOpen ? "Fermer le chatbot" : "Ouvrir le chatbot"}
+            title={chatOpen ? "Fermer le chatbot" : "Ouvrir le chatbot"}
+          >
+            {chatOpen ? "×" : "Chat"}
+          </button>
+
+          {chatOpen ? (
+            <div className="chatbot-panel">
+              <iframe
+                title="FastBots Chat"
+                className="chatbot-iframe"
+                src="https://app.fastbots.ai/embed/cmb98h9dk01wmmxk7ya4516rj"
+              />
+            </div>
+          ) : null}
+        </>
+      )}
     </div>
   );
 }
