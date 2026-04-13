@@ -143,13 +143,6 @@ Ce projet a été développé dans le cadre de ma formation en **informatique et
 
 ---
 
-# Auteur
-
-Adrien Hermann Mbopda Fodjo  
-Étudiant en Bachelor Développement Data & Intelligence Artificielle – ECE Lyon
-
-GitHub : https://github.com/Adrienhm
-
 
 
 
